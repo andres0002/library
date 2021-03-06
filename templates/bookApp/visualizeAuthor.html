@@ -1,0 +1,15 @@
+{% extends 'index.html' %}
+{% block title %}
+    Visualize Author
+{% endblock title %}
+{% block body %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ authorForm.as_p }}
+        <button>
+            <a href="{% url 'book:listAuthors' %}">
+                Cancel
+            </a>
+        </button>
+    </form>
+{% endblock body %}

@@ -1,0 +1,16 @@
+{% extends 'index.html' %}
+{% block title %}
+    Update Author
+{% endblock title %}
+{% block body %}
+    <form method="POST">
+        {% csrf_token %}
+        {{ authorForm.as_p }}
+        <button type="submit">Update Author</button>
+        <button>
+            <a href="{% url 'book:listAuthors' %}">
+                Cancel
+            </a>
+        </button>
+    </form>
+{% endblock body %}

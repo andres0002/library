@@ -1,0 +1,76 @@
+{% extends 'index.html' %}
+{% block title %}
+    List Authors
+{% endblock title %}
+{% block body %}
+    <button>
+        <a href="{% url 'index' %}">Index</a>
+    </button>
+    <button>
+        <a href="{% url 'book:createAuthor' %}">Add Author</a>
+    </button>
+    {% if authors %}
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name Author</th>
+                    <th>Last Name Author</th>
+                    <th>Nationality Author</th>
+                    <th>Description Author</th>
+                    <th>CreateDate Author</th>
+                    <th>UpdateDate Author</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            {% for author in authors %}
+                <tbody>
+                    <tr>
+                        <td>
+                            {{ author.id }}
+                        </td>
+                        <td>
+                            {{ author.nameAuthor }}
+                        </td>
+                        <td>
+                            {{ author.lastNameAuthor }}
+                        </td>
+                        <td>
+                            {{ author.nationalityAuthor }}
+                        </td>
+                        <td>
+                            {{ author.descriptionAuthor}}
+                        </td>
+                        <td>
+                            {{ author.createDateAuthor }}
+                        </td>
+                        <td>
+                            {{ author.updateDateAuthor }}
+                        </td>
+                        <td>
+                            <button>
+                                <a href="{% url 'book:visualizeAuthor' author.id %}">
+                                    Visualize
+                                </a>
+                            </button>
+                            <button>
+                                <a href="{% url 'book:updateAuthor' author.id %}">
+                                    Update
+                                </a>
+                            </button>
+                            <button>
+                                <a href="{% url 'book:deleteAuthor' author.id %}">
+                                    Delete
+                                </a>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>
+            Not authors
+        </p>
+    {% endif %}
+{% endblock body %}
