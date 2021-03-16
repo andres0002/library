@@ -2,7 +2,7 @@
 {% block title %}
     Update Author
 {% endblock title %}
-{% block body %}
+{% block content %}
     <form method="POST">
         {% csrf_token %}
         {{ authorForm.as_p }}
@@ -13,4 +13,4 @@
             </a>
         </button>
     </form>
-{% endblock body %}
+{% endblock content %}

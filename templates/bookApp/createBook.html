@@ -2,7 +2,7 @@
 {% block title %}
     Create Book
 {% endblock title %}
-{% block body %}
+{% block content %}
     <form method="POST">
         {% csrf_token %}
         {{ bookForm.as_p }}
@@ -11,4 +11,4 @@
             <a href="{% url 'book:listBooks' %}">Cancel</a>
         </button>
     </form>
-{% endblock body %}
+{% endblock content %}
