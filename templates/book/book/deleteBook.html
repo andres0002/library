@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+{% block title %}
+    Delete Book
+{% endblock title %}
+{% block content %}
+    <div class="card">
+        <div class="card-header text-center"><strong class="card-title">Delete Book</strong></div>
+        <div class="card-body card-block">
+            <form action="#" method="POST" enctype="multipart/form-data" class="form-horizontal">
+                {% csrf_token %}
+                <div class="row form-group">
+                    <div class="col col-md-3">{{ bookForm.titleBook.label }}</div>
+                    <div class="col-12 col-md-9">{{ bookForm.titleBook }}</div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3">{{ bookForm.publicationDateBook.label }}</div>
+                    <div class="col-12 col-md-9">{{ bookForm.publicationDateBook }}</div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3">{{ bookForm.authorId.label }}</div>
+                    <div class="col-12 col-md-9">{{ bookForm.authorId }}</div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Delete Book</button>
+                    <button type="reset" class="btn btn-danger">
+                        <a href="{% url 'book:listBooks' %}" style="color: white;">
+                            Cancel
+                        </a>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

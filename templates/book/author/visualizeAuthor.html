@@ -1,0 +1,38 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}
+    Visualize Author
+{% endblock title %}
+{% block content %}
+    <div class="card">
+        <div class="card-header text-center"><strong class="card-title">Visualize Author</strong></div>
+        <div class="card-body card-block">
+            <form action="#" method="POST" enctype="multipart/form-data" class="form-horizontal">
+                {% csrf_token %}
+                <div class="row form-group">
+                    <div class="col col-md-3">{{ form.nameAuthor.label }}</div>
+                    <div class="col-12 col-md-9">{{ form.nameAuthor }}</div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3">{{ form.lastNameAuthor.label }}</div>
+                    <div class="col-12 col-md-9">{{ form.lastNameAuthor }}</div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3">{{ form.nationalityAuthor.label }}</div>
+                    <div class="col-12 col-md-9">{{ form.nationalityAuthor }}</div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3">{{ form.descriptionAuthor.label }}</div>
+                    <div class="col-12 col-md-9">{{ form.descriptionAuthor }}</div>
+                </div>
+                <div class="text-center">
+                    <button type="reset" class="btn btn-danger">
+                        <a href="{% url 'book:listAuthors' %}" style="color: white;">
+                            Cancel
+                        </a>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

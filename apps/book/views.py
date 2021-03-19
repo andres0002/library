@@ -1,96 +1,66 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DeleteView
 from .models import Author, Book
 from .forms import AuthorForm, BookForm
 
 # Create your views here.
 
-def Home(request):
-    return render(request, 'index.html')
+class Home(TemplateView):
+    template_name = 'index.html'
 
-def createAuthor(request):
-    if (request.method=='POST'):
-        authorForm = AuthorForm(request.POST)
-        if (authorForm.is_valid()):
-            authorForm.save()
-            return redirect('book:listAuthors')
-    else:
-        authorForm = AuthorForm()
-    return render(request, 'bookApp/createAuthor.html', {'authorForm': authorForm})
+class CreateAuthor(CreateView):
+    model = Author
+    form_class = AuthorForm
+    template_name = 'book/author/createAuthor.html'
+    success_url = reverse_lazy('book:listAuthors')
 
-def listAuthor(request):
-    authors = Author.objects.all()
-    return render(request, 'bookApp/listAuthors.html', {'authors': authors})
+class ListAuthor(ListView):
+    model = Author
+    template_name = 'book/author/listAuthors.html'
+    context_object_name = 'authors'
+    queryset = Author.objects.all()
 
-def visualizeAuthor(request, id):
-    author = Author.objects.get(id=id)
-    authorForm = AuthorForm()
-    if (request.method=='GET'):
-        authorForm = AuthorForm(instance=author)
-    return render(request, 'bookApp/visualizeAuthor.html', {'authorForm':  authorForm})
+class VisualizeAuthor(UpdateView):
+    model = Author
+    form_class = AuthorForm
+    template_name = 'book/author/visualizeAuthor.html'
+    success_url = reverse_lazy('book:listAuthors')
 
-def updateAuthor(request, id):
-    author = Author.objects.get(id=id)
-    authorForm = AuthorForm()
-    if (request.method=='GET'):
-        authorForm = AuthorForm(instance=author)
-    else:
-        authorForm = AuthorForm(request.POST, instance=author)
-        if (authorForm.is_valid()):
-            authorForm.save()
-            return redirect('book:listAuthors')
-    return render(request, 'bookApp/updateAuthor.html', {'authorForm': authorForm})
+class UpdateAuthor(UpdateView):
+    model = Author
+    form_class = AuthorForm
+    template_name = 'book/author/updateAuthor.html'
+    success_url = reverse_lazy('book:listAuthors')
 
-def deleteAuthor(request, id):
-    author = Author.objects.get(id=id)
-    authorForm = AuthorForm()
-    if (request.method=='GET'):
-        authorForm = AuthorForm(instance=author)
-    else:
-        author.delete()
-        return redirect('book:listAuthors')
-    return render(request, 'bookApp/deleteAuthor.html', {'authorForm': authorForm})
+class DeleteAuthor(DeleteView):
+    model = Author
+    success_url = reverse_lazy('book:listAuthors')
 
-def createBook(request):
-    if (request.method=='POST'):
-        bookForm = BookForm(request.POST)
-        if (bookForm.is_valid()):
-            titleBook = bookForm.cleaned_data['titleBook']
-            publicationDateBook = bookForm.cleaned_data['publicationDateBook']
-            authorId = bookForm.cleaned_data['authorId']
-            book = Book(titleBook=titleBook, publicationDateBook=publicationDateBook, authorId=authorId)
-            book.save()
-            return redirect('book:listBooks')
-    else:
-        bookForm = BookForm()
-    return render(request, 'bookApp/createBook.html', {'bookForm': bookForm})
+class CreateBook(CreateView):
+    model = Book
+    form_class = BookForm
+    template_name = 'book/book/createBook.html'
+    success_url = reverse_lazy('book:listBooks')
 
-def listBook(request):
-    books = Book.objects.all()
-    return render(request, 'bookApp/listBooks.html', {'books': books})
+class ListBook(ListView):
+    model = Book
+    template_name = 'book/book/listBooks.html'
+    context_object_name = 'books'
+    queryset = Book.objects.all()
 
-def visualizeBook(request, id):
-    book = Book.objects.get(id=id)
-    if (request.method=='GET'):
-        bookForm = BookForm(instance=book)
-    return render(request, 'bookApp/visualizeBook.html', {'bookForm': bookForm})
+class VisualizeBook(UpdateView):
+    model = Book
+    form_class = BookForm
+    template_name = 'book/book/visualizeBook.html'
+    success_url = reverse_lazy('book:listBooks')
 
-def updateBook(request, id):
-    book = Book.objects.get(id=id)
-    if (request.method=='GET'):
-        bookForm = BookForm(instance=book)
-    else:
-        bookForm = BookForm(request.POST, instance=book)
-        if (bookForm.is_valid()):
-            bookForm.save()
-            return redirect('book:listBooks')
-    return render(request, 'bookApp/updateBook.html', {'bookForm': bookForm})
+class UpdateBook(UpdateView):
+    model = Book
+    form_class = BookForm
+    template_name = 'book/book/updateBook.html'
+    success_url = reverse_lazy('book:listBooks')
 
-def deleteBook(request, id):
-    book = Book.objects.get(id=id)
-    bookForm = BookForm()
-    if (request.method=='GET'):
-        bookForm = BookForm(instance=book)
-    else:
-        book.delete()
-        return redirect('book:listBooks')
-    return render(request, 'bookApp/deleteBook.html', {'bookForm': bookForm})
+class DeleteBook(DeleteView):
+    model = Book
+    success_url = reverse_lazy('book:listBooks')

@@ -8,13 +8,18 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header text-center">
                         <strong class="card-title">List Authors</strong>
                     </div>
                     <div class="card-body">
                         <div id="bootstrap-data-table_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
                             <div class="row">
                                 <div class="col-sm-12">
+                                    <div style="float: right; margin-bottom: 1rem;">
+                                        <button class="btn btn-success">
+                                            <a class="fa fa-plus-square" href="{% url 'book:createAuthor' %}" style="color: white;"> Add Author</a>
+                                        </button>
+                                    </div>
                                     {% if authors %}
                                         <table id="bootstrap-data-table" class="table table-striped table-bordered dataTable no-footer" role="grid" aria-describedby="bootstrap-data-table_info">
                                             <thead>
@@ -58,11 +63,17 @@
                                                                 <li class="menu-item-has-children dropdown">
                                                                     <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                                         <i class="menu-icon fa fa-user">Author</i>
-                                                                    </a>
+                                                                    </a>                                                                    
                                                                     <ul class="sub-menu children dropdown-menu">
-                                                                        <li><i class="fa fa-eye"></i><a href="{% url 'book:visualizeAuthor' author.id %}">Visualize</a></li>
-                                                                        <li><i class="fa fa-pencil"></i><a href="{% url 'book:updateAuthor' author.id %}">Update</a></li>
-                                                                        <li><i class="fa fa-eraser"></i><a href="{% url 'book:deleteAuthor' author.id %}">Delete</a></li>
+                                                                        <button class="btn btn-primary">
+                                                                            <li><i class="fa fa-eye"></i><a href="{% url 'book:visualizeAuthor' author.pk %}" style="color: white;"> Visualize</a></li>
+                                                                        </button>
+                                                                        <button class="btn btn-primary">
+                                                                            <li><i class="fa fa-pencil"></i><a href="{% url 'book:updateAuthor' author.pk %}" style="color: white;"> Update</a></li>
+                                                                        </button>
+                                                                        <button class="btn btn-danger">
+                                                                            <li><i class="fa fa-eraser"></i><a href="{% url 'book:deleteAuthor' author.pk %}" style="color: white;"> Delete</a></li>
+                                                                        </button>                                                                        
                                                                     </ul>
                                                                 </li>
                                                             </ul>
@@ -85,3 +96,6 @@
         </div>
     </div>
 {% endblock content %}
+
+{% block scripts_strass %}
+{% endblock scripts_strass %}
