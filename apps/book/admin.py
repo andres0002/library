@@ -1,7 +1,7 @@
 from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-from .models import Author, Book
+from apps.book.models import Author, Book
 
 # Register your models here.
 

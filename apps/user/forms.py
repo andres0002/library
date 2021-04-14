@@ -1,4 +1,6 @@
+from django import forms
 from django.contrib.auth.forms import AuthenticationForm
+from apps.user.models import User
 
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -7,3 +9,60 @@ class LoginForm(AuthenticationForm):
         self.fields['username'].widget.attrs['placeholder']='Username'
         self.fields['password'].widget.attrs['class']='form-control'
         self.fields['password'].widget.attrs['placeholder']='Password'
+
+class UserForm(forms.ModelForm):
+    password1 = forms.CharField(label='Add Password', widget=forms.PasswordInput())
+    password1.widget.attrs['class']='form-control'
+    password1.widget.attrs['placeholder']='Add your password.'
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput())
+    password2.widget.attrs['class']='form-control'
+    password2.widget.attrs['placeholder']='Add your password again.'
+    class Meta:
+        model = User
+        fields = ['username', 'name', 'lastname', 'email']
+        labels = {
+            'username':'User name',
+            'name':'Name',
+            'lastname':'Last Name',
+            'email':'Email'
+        }
+        widgets = {
+            'username' : forms.TextInput(
+                attrs = {
+                    'class':'form-control',
+                    'placeholder':'Enter a User Name'
+                }
+            ),
+            'name' : forms.TextInput(
+                attrs = {
+                    'class':'form-control',
+                    'placeholder':'Enter a Name'
+                }
+            ),
+            'lastname' : forms.TextInput(
+                attrs = {
+                    'class':'form-control',
+                    'placeholder':'Enter a Last Name'
+                }
+            ),
+            'email' : forms.EmailInput(
+                attrs = {
+                    'class':'form-control',
+                    'placeholder':'Enter a Email'
+                }
+            )
+        }
+    
+    def clean_password2(self):
+        password1 = self.cleaned_data['password1']
+        password2 = self.cleaned_data['password2']
+        if (password1 and password2 and password1 != password2):
+            raise forms.ValidationError('Passwords not equal.')
+        return password2
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password2'])
+        if (commit):
+            user.save()
+        return user

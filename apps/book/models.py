@@ -10,17 +10,29 @@ class Author(models.Model):
     createDateAuthor = models.DateTimeField(auto_now_add=True)
     updateDateAuthor = models.DateTimeField(auto_now=True)
     
+    def clean(self):
+        """You can add validations here.
+        """
+        pass
+
+    def save(self, *args, **kwargs):
+        """[You can add validations here.]
+        """
+        super(Author, self).save(*args, **kwargs)
     class Meta:
         verbose_name = 'Author'
         verbose_name_plural = 'Authors'
         ordering = ['nameAuthor']
+
+    def natural_key(self):
+        return f'{self.nameAuthor} {self.lastNameAuthor}'
 
     def __str__(self):
         return self.nameAuthor
 
 class Book(models.Model):
     titleBook = models.CharField(max_length=150, blank=False, null=False)
-    publicationDateBook = models.DateTimeField(blank=False, null=False)
+    publicationDateBook = models.DateField(blank=False, null=False)
     authorId = models.ManyToManyField(Author)
     createDateBook = models.DateTimeField(auto_now_add=True)
     updateDateBook = models.DateTimeField(auto_now=True)

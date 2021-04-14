@@ -1,5 +1,5 @@
 from django import forms
-from .models import Author, Book
+from apps.book.models import Author, Book
 
 class AuthorForm(forms.ModelForm):
     class Meta:
@@ -44,6 +44,10 @@ class AuthorForm(forms.ModelForm):
         }
 
 class BookForm(forms.ModelForm):
+
+    #def __init__(self, *args, **kwargs):
+    #    super().__init__(*args, **kwargs)
+    #    self.fields['authorId'].queryset = Author.objects.filter(statusAuthor=True)
     class Meta:
         model = Book
         fields = [
@@ -63,7 +67,7 @@ class BookForm(forms.ModelForm):
                     'placeholder': 'Add Title Book'
                 }
             ),
-            'publicationDateBook': forms.DateTimeInput(
+            'publicationDateBook': forms.SelectDateWidget(
                 attrs = {
                     'class': 'form-control',
                     'placeholder': 'Add Publication Date Book'

@@ -39,7 +39,6 @@ a, button {
     text-decoration: none;
     outline: none!important;
     color: #878787;
- 
     transition: all 0.25s ease;
 
 }
@@ -184,7 +183,7 @@ canvas {
         padding-bottom: 20px;
     }
     .msg-container { 
-         
+        
     }
     .avatar {  
         width: 64px;
@@ -273,7 +272,7 @@ canvas {
 /* Global Styles */
 
 /* Main Styles */
- 
+
 aside.left-panel {
     background: $menu-bg; 
     height: 100vh;
@@ -301,8 +300,6 @@ aside.left-panel {
         margin-left: 83px;
     }
 }
-  
-  
 
 .navbar {
     background: $menu-bg;
@@ -315,7 +312,7 @@ aside.left-panel {
     .main-menu {
         float: left;
         padding: 0;
-         padding-bottom: 50px;
+        padding-bottom: 50px;
     }
     .menu-title {
         color: #41434d;
@@ -396,7 +393,6 @@ aside.left-panel {
                         border-width: 1px;
                         border-color: $menu-color $menu-color transparent transparent;
                         transform:rotate(45deg);
-  
                         transition: all .25s ease;
                     }
                     &:hover:before { 
@@ -482,7 +478,7 @@ aside.left-panel {
         }
     }
     .sub-menu {
-       .subtitle {
+        .subtitle {
             display: block;
             font-size: 15px;  
             line-height: 35px;

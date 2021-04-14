@@ -1,17 +1,17 @@
 from django.urls import path
-from django.contrib.auth.decorators import login_required
-from .views import ListAuthor, CreateAuthor, VisualizeAuthor, UpdateAuthor, DeleteAuthor
-from .views import ListBook, CreateBook, VisualizeBook, UpdateBook, DeleteBook
+from apps.book.views import *
 
 urlpatterns = [
-    path('listAuthors/', login_required(ListAuthor.as_view()), name='listAuthors'),
-    path('createAuthor/', login_required(CreateAuthor.as_view()), name='createAuthor'),
-    path('visualizeAuthor/<int:pk>', login_required(VisualizeAuthor.as_view()), name='visualizeAuthor'),
-    path('updateAuthor/<int:pk>', login_required(UpdateAuthor.as_view()), name='updateAuthor'),
-    path('deleteAuthor/<int:pk>', login_required(DeleteAuthor.as_view()), name='deleteAuthor'),
-    path('listBooks/', login_required(ListBook.as_view()), name='listBooks'),
-    path('createBook/', login_required(CreateBook.as_view()), name='createBook'),
-    path('visualizeBook/<int:pk>', login_required(VisualizeBook.as_view()), name='visualizeBook'),
-    path('updateBook/<int:pk>', login_required(UpdateBook.as_view()), name='updateBook'),
-    path('deleteBook/<int:pk>', login_required(DeleteBook.as_view()), name='deleteBook')
+    #Author views.
+    path('authors_list/', AuthorsList.as_view(), name='authors_list'),
+    path('authors_table/', AuthorsTable.as_view(), name='authors_table'),
+    path('create_author/', CreateAuthor.as_view(), name='create_author'),
+    path('update_author/<int:pk>/', UpdateAuthor.as_view(), name='update_author'),
+    path('delete_author/<int:pk>/', DeleteAuthor.as_view(), name='delete_author'),
+    #Book views.
+    path('books_list/', BooksList.as_view(), name='books_list'),
+    path('books_table/', BooksTable.as_view(), name='books_table'),
+    path('create_book/', CreateBook.as_view(), name='create_book'),
+    path('update_book/<int:pk>/', UpdateBook.as_view(), name='update_book'),
+    path('delete_book/<int:pk>/', DeleteBook.as_view(), name='delete_book')
 ]
