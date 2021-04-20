@@ -38,10 +38,14 @@ function listAuthors(){
 
 function register(){
     activeButtonCreation();
+    var data = new FormData($('#form_creation').get(0));
 	$.ajax({
-		data: $('#form_creation').serialize(),
 		url: $('#form_creation').attr('action'),
 		type: $('#form_creation').attr('method'),
+        data: data,
+        cache: false,
+        processData: false,
+        contentType: false,
 		success: function(response){
             successNotification(response.message);
 			listAuthors();
@@ -57,10 +61,14 @@ function register(){
 
 function edition(){
     activeButtonEdition();
+    var data = new FormData($('#form_edition').get(0));
     $.ajax({
-        data: $('#form_edition').serialize(),
         url: $('#form_edition').attr('action'),
         type: $('#form_edition').attr('method'),
+        data: data,
+        cache: false,
+        processData: false,
+        contentType: false,
         success: function(response){
             successNotification(response.message);
             listAuthors();

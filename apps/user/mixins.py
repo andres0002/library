@@ -2,7 +2,7 @@ from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.contrib import messages
 
-class LoginRequiredUserIstaffRequiredMixin(object):
+class LoginRequiredUserIstaffOrIsactiveRequiredMixin(object):
     def dispatch(self, request, *args, **kwargs):
         if (request.user.is_authenticated):
             if (request.user.is_staff):

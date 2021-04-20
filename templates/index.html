@@ -32,23 +32,29 @@
                         </li>
                         <!-- <li class="menu-title">IU elements</li> /.menu-title -->
                         {% if request.user.is_superuser %}
-                        <li class="menu-item-has-children dropdown">
-                            <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-users"></i>Users</a>
-                            <ul class="sub-menu children dropdown-menu">
-                                <li><i class="fa fa-list"></i><a href="{% url 'user:users_list' %}">List Users</a></li>
-                            </ul>
-                        </li>
+                            <li class="menu-item-has-children dropdown">
+                                <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-users"></i>Users</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    <li><i class="fa fa-list"></i><a href="{% url 'user:users_list' %}">List Users</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children dropdown">
+                                <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-users"></i>Authors</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    <li><i class="fa fa-list"></i><a href="{% url 'book:authors_list' %}">List Authors</a></li>
+                                </ul>
+                            </li>
+                            <li class="menu-item-has-children dropdown">
+                                <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Books</a>
+                                <ul class="sub-menu children dropdown-menu">
+                                    <li><i class="menu-icon fa fa-list"></i><a href="{% url 'book:books_list' %}">List Books</a></li>
+                                </ul>
+                            </li>
                         {% endif %}
-                        <li class="menu-item-has-children dropdown">
-                            <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-users"></i>Authors</a>
-                            <ul class="sub-menu children dropdown-menu">
-                                <li><i class="fa fa-list"></i><a href="{% url 'book:authors_list' %}">List Authors</a></li>
-                            </ul>
-                        </li>
                         <li class="menu-item-has-children dropdown">
                             <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Books</a>
                             <ul class="sub-menu children dropdown-menu">
-                                <li><i class="menu-icon fa fa-list"></i><a href="{% url 'book:books_list' %}">List Books</a></li>
+                                <li><i class="menu-icon fa fa-list"></i><a href="{% url 'book:available_books' %}">Available Books</a></li>
                             </ul>
                         </li>
                     </ul>

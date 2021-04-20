@@ -12,7 +12,7 @@ from django.contrib.auth import login, logout
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from apps.user.models import User
 from apps.user.forms import LoginForm, UserForm
-from apps.user.mixins import LoginRequiredUserIstaffRequiredMixin, UserPermissionRequiredMixin
+from apps.user.mixins import LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin
 
 # Create your views here.
 
@@ -40,11 +40,11 @@ def logoutUser(request):
 class Home(LoginRequiredMixin, TemplateView):
     template_name = 'index.html'
 
-class UsersList(LoginRequiredUserIstaffRequiredMixin, UserPermissionRequiredMixin, TemplateView):
+class UsersList(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, TemplateView):
     permission_required = ('user.view_user', 'user.add_user', 'user.change_user', 'user.delete_user')
     template_name = 'user/users_table.html'
 
-class UsersTable(LoginRequiredUserIstaffRequiredMixin, UserPermissionRequiredMixin, ListView):
+class UsersTable(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, ListView):
     permission_required = ('user.view_user', 'user.add_user', 'user.change_user', 'user.delete_user')
     model = User
 
@@ -62,7 +62,7 @@ class UsersTable(LoginRequiredUserIstaffRequiredMixin, UserPermissionRequiredMix
         else:
             return redirect('user:users_list')
 
-class CreateUser(LoginRequiredUserIstaffRequiredMixin, UserPermissionRequiredMixin, CreateView):
+class CreateUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, CreateView):
     permission_required = 'user.add_user'
     model = User
     form_class = UserForm
@@ -70,13 +70,14 @@ class CreateUser(LoginRequiredUserIstaffRequiredMixin, UserPermissionRequiredMix
 
     def post(self, request, *args, **kwargs):
         if (request.is_ajax()):
-            form = self.form_class(request.POST)
+            form = self.form_class(request.POST, request.FILES)
             if (form.is_valid()):
                 new_user = self.model(
                     username = form.cleaned_data['username'],
                     name = form.cleaned_data['name'],
                     lastname = form.cleaned_data['lastname'],
-                    email = form.cleaned_data['email']
+                    email = form.cleaned_data['email'],
+                    image = form.cleaned_data['image']
                 )
                 new_user.set_password(form.cleaned_data['password1'])
                 new_user.save()
@@ -94,7 +95,7 @@ class CreateUser(LoginRequiredUserIstaffRequiredMixin, UserPermissionRequiredMix
         else:
             return redirect('user:users_list')
 
-class UpdateUser(LoginRequiredUserIstaffRequiredMixin, UserPermissionRequiredMixin, UpdateView):
+class UpdateUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, UpdateView):
     permission_required = 'user.change_user'
     model = User
     form_class = UserForm
@@ -102,7 +103,7 @@ class UpdateUser(LoginRequiredUserIstaffRequiredMixin, UserPermissionRequiredMix
 
     def post(self, request, *args, **kwargs):
         if (request.is_ajax()):
-            form = self.form_class(request.POST, instance=self.get_object())
+            form = self.form_class(request.POST, request.FILES, instance=self.get_object())
             if (form.is_valid()):
                 form.save()
                 message = f'Successfully {self.model.__name__} updation.'
@@ -119,7 +120,7 @@ class UpdateUser(LoginRequiredUserIstaffRequiredMixin, UserPermissionRequiredMix
         else:
             return redirect('user:users_list')
 
-class DeleteUser(LoginRequiredUserIstaffRequiredMixin, UserPermissionRequiredMixin, DeleteView):
+class DeleteUser(LoginRequiredUserIstaffOrIsactiveRequiredMixin, UserPermissionRequiredMixin, DeleteView):
     permission_required = 'user.delete_user'
     model = User
     template_name = 'user/delete_user.html'

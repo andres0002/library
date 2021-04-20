@@ -25,11 +25,11 @@ class UserManager(BaseUserManager):
         return self._create_user(username, email, name, lastname, password, True, True, **stra_fields)
 
 class User(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField('Username', unique=True, max_length=100)
-    email = models.EmailField('Email', unique=True, max_length=200)
-    name = models.CharField('Names', max_length=200, blank=True, null=True)
-    lastname = models.CharField('Last names', max_length=200, blank=True, null=True)
-    image = models.ImageField('Profile Image', upload_to='profile/', max_length=200, blank=True, null=True)
+    username = models.CharField(unique=True, max_length=100)
+    email = models.EmailField(unique=True, max_length=200)
+    name = models.CharField(max_length=200, blank=True, null=True)
+    lastname = models.CharField(max_length=200, blank=True, null=True)
+    image = models.ImageField(upload_to='user/profile/image/', max_length=255, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     objects = UserManager()

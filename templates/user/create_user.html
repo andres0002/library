@@ -8,7 +8,7 @@
                 </button>
             </div>
         </div>
-        <form id="form_creation" action="{% url 'user:create_user' %}" method="POST">
+        <form id="form_creation" action="{% url 'user:create_user' %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="modal-body">
                 <div id="errors"></div>

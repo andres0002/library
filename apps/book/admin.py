@@ -1,7 +1,8 @@
 from django.contrib import admin
 from import_export import resources
 from import_export.admin import ImportExportModelAdmin
-from apps.book.models import Author, Book
+from apps.book.models import Author, Book, Reservation
+from apps.book.forms import ReservationForm
 
 # Register your models here.
 
@@ -32,5 +33,20 @@ class BookAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     list_filter = ('publicationDateBook',)
     resource_class = BookResource
 
+class ReservationResource(resources.ModelResource):
+    class Meta:
+        model = Reservation
+
+class ReservationAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    form = ReservationForm
+    search_fields = ('book', 'user')
+    readonly_fields = ('createDate', 'updateDate')
+    list_filter = ('book', 'user', 'createDate', 'updateDate')
+    list_display = [
+        'book', 'user', 'amount_days', 'createDate', 'updateDate'
+    ]
+    resource_class = ReservationResource
+
 admin.site.register(Author, AuthorAdmin)
 admin.site.register(Book, BookAdmin)
+admin.site.register(Reservation, ReservationAdmin)

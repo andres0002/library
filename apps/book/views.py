@@ -4,16 +4,19 @@ from django.core.serializers import serialize
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.http import HttpResponse, JsonResponse
-from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DeleteView
-from apps.book.models import Author, Book
+from django.views.generic import TemplateView, ListView, UpdateView, CreateView, DeleteView, DetailView
+from apps.book.models import Author, Book, Reservation
 from apps.book.forms import AuthorForm, BookForm
+from apps.user.mixins import UserPermissionRequiredMixin
 
 # Create your views here.
 
-class AuthorsList(LoginRequiredMixin, TemplateView):
+class AuthorsList(LoginRequiredMixin, UserPermissionRequiredMixin, TemplateView):
+    permission_required = ('user.view_author', 'user.add_author', 'user.change_author', 'user.delete_author')
     template_name = 'book/author/authors_table.html'
 
-class AuthorsTable(LoginRequiredMixin, ListView):
+class AuthorsTable(LoginRequiredMixin, UserPermissionRequiredMixin, ListView):
+    permission_required = ('user.view_author', 'user.add_author', 'user.change_author', 'user.delete_author')
     model = Author
 
     def get_queryset(self):
@@ -30,14 +33,15 @@ class AuthorsTable(LoginRequiredMixin, ListView):
         else:
             return redirect('book:authors_list')
 
-class CreateAuthor(LoginRequiredMixin, CreateView):
+class CreateAuthor(LoginRequiredMixin, UserPermissionRequiredMixin, CreateView):
+    permission_required = 'user.add_author'
     model = Author
     form_class = AuthorForm
     template_name = 'book/author/create_author.html'
 
     def post(self, request, *args, **kwargs):
         if (request.is_ajax()):
-            form = self.form_class(request.POST)
+            form = self.form_class(request.POST, request.FILES)
             if (form.is_valid()):
                 form.save()
                 message = f'Successfully {self.model.__name__} registered.'
@@ -54,14 +58,15 @@ class CreateAuthor(LoginRequiredMixin, CreateView):
         else:
             return redirect('book:authors_list')
 
-class UpdateAuthor(LoginRequiredMixin, UpdateView):
+class UpdateAuthor(LoginRequiredMixin, UserPermissionRequiredMixin, UpdateView):
+    permission_required = 'user.change_author'
     model = Author
     form_class = AuthorForm
     template_name = 'book/author/update_author.html'
 
     def post(self, request, *args, **kwargs):
         if (request.is_ajax()):
-            form = self.form_class(request.POST, instance=self.get_object())
+            form = self.form_class(request.POST, request.FILES, instance=self.get_object())
             if (form.is_valid()):
                 form.save()
                 message = f'Successfully {self.model.__name__} updation.'
@@ -78,7 +83,8 @@ class UpdateAuthor(LoginRequiredMixin, UpdateView):
         else:
             return redirect('book:authors_list')
 
-class DeleteAuthor(LoginRequiredMixin, DeleteView):
+class DeleteAuthor(LoginRequiredMixin, UserPermissionRequiredMixin, DeleteView):
+    permission_required = 'user.delete_author'
     model = Author
     template_name = 'book/author/delete_author.html'
 
@@ -94,10 +100,12 @@ class DeleteAuthor(LoginRequiredMixin, DeleteView):
         else:
             redirect('book:authors_list')
 
-class BooksList(LoginRequiredMixin, TemplateView):
+class BooksList(LoginRequiredMixin, UserPermissionRequiredMixin, TemplateView):
+    permission_required = ('user.view_book', 'user.add_book', 'user.change_book', 'user.delete_book')
     template_name = 'book/book/books_table.html'
 
-class BooksTable(LoginRequiredMixin, ListView):
+class BooksTable(LoginRequiredMixin, UserPermissionRequiredMixin, ListView):
+    permission_required = ('user.view_book', 'user.add_book', 'user.change_book', 'user.delete_book')
     model = Book
 
     def get_queryset(self):
@@ -113,14 +121,15 @@ class BooksTable(LoginRequiredMixin, ListView):
             return HttpResponse(serialize('json', self.get_queryset(), use_natural_foreign_keys=True), 'application/json')
         else:
             return redirect('book:books_list')
-class CreateBook(LoginRequiredMixin, CreateView):
+class CreateBook(LoginRequiredMixin, UserPermissionRequiredMixin, CreateView):
+    permission_required = 'user.add_book'
     model = Book
     form_class = BookForm
     template_name = 'book/book/create_book.html'
 
     def post(self, request, *args, **kwargs):
         if (request.is_ajax()):
-            form = self.form_class(request.POST)
+            form = self.form_class(request.POST, request.FILES)
             if (form.is_valid()):
                 form.save()
                 message = f'Successfully {self.model.__name__} registered.'
@@ -137,14 +146,15 @@ class CreateBook(LoginRequiredMixin, CreateView):
         else:
             return redirect('book:books_list')
 
-class UpdateBook(LoginRequiredMixin, UpdateView):
+class UpdateBook(LoginRequiredMixin, UserPermissionRequiredMixin, UpdateView):
+    permission_required = 'user.change_book'
     model = Book
     form_class = BookForm
     template_name = 'book/book/update_book.html'
 
     def post(self, request, *args, **kwargs):
         if (request.is_ajax()):
-            form = self.form_class(request.POST, instance=self.get_object())
+            form = self.form_class(request.POST, request.FILES, instance=self.get_object())
             if (form.is_valid()):
                 form.save()
                 message = f'Successfully {self.model.__name__} updation.'
@@ -161,7 +171,8 @@ class UpdateBook(LoginRequiredMixin, UpdateView):
         else:
             return redirect('book:books_list')
 
-class DeleteBook(LoginRequiredMixin, DeleteView):
+class DeleteBook(LoginRequiredMixin, UserPermissionRequiredMixin, DeleteView):
+    permission_required = 'user.delete_book'
     model = Book
     template_name = 'book/book/delete_book.html'
 
@@ -176,3 +187,42 @@ class DeleteBook(LoginRequiredMixin, DeleteView):
             return response
         else:
             return redirect('book:books_list')
+
+class AvailableBooks(LoginRequiredMixin, ListView):
+    model = Book
+    paginate_by = 6
+    template_name = 'book/book/available_books.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(amountBook__gte=1)
+
+class AvailableBookDetail(LoginRequiredMixin, DetailView):
+    model = Book
+    template_name = 'book/book/available_book_detail.html'
+
+    def get(self, request, *args, **kwargs):
+        if (self.get_object().amountBook > 0):
+            return render(request, self.template_name, {'object': self.get_object()})
+        return redirect('book:available_books')
+
+class ReservationRegister(LoginRequiredMixin, CreateView):
+    model = Reservation
+    success_url = reverse_lazy('book:available_books')
+
+    def post(self, request, *args, **kwargs):
+        if (request.is_ajax()):
+            user = request.user
+            book = Book.objects.filter(id = request.POST.get('book')).first()
+            if (user and book):
+                if (book.amountBook > 0):
+                    new_reservation = self.model(
+                        book = book,
+                        user = user
+                    )
+                    new_reservation.save()
+                    message = f'Successfully {self.model.__name__} registered.'
+                    error = 'There are no errors.'
+                    response = JsonResponse({'message':message, 'error':error, 'url': self.success_url})
+                    response.status_code = 201
+                    return response
+        return redirect('book:available_books')

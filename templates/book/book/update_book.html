@@ -8,7 +8,7 @@
                 </button>
             </div>
         </div>
-        <form id="form_edition" action="{% url 'book:update_book' object.pk %}" method="POST">
+        <form id="form_edition" action="{% url 'book:update_book' object.pk %}" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="modal-body">
                 <div id="errors_edition"></div>

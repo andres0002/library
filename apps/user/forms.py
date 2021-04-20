@@ -19,12 +19,19 @@ class UserForm(forms.ModelForm):
     password2.widget.attrs['placeholder']='Add your password again.'
     class Meta:
         model = User
-        fields = ['username', 'name', 'lastname', 'email']
+        fields = [
+            'username',
+            'name',
+            'lastname',
+            'email',
+            'image'
+        ]
         labels = {
-            'username':'User name',
-            'name':'Name',
-            'lastname':'Last Name',
-            'email':'Email'
+            'username':'User Username',
+            'name':'User Name',
+            'lastname':'User Last Name',
+            'email':'User Email',
+            'image': 'User Image'
         }
         widgets = {
             'username' : forms.TextInput(

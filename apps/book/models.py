@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models.signals import post_save
+from apps.user.models import User
 
 # Create your models here.
 
@@ -7,6 +9,7 @@ class Author(models.Model):
     lastNameAuthor = models.CharField(max_length=150, blank=False, null=False)
     nationalityAuthor = models.CharField(max_length=100, blank=False, null=False)
     descriptionAuthor = models.TextField(blank=False, null=False)
+    imageAuthor = models.ImageField(upload_to='book/authors/images/', max_length=255, null=True, blank=True)
     createDateAuthor = models.DateTimeField(auto_now_add=True)
     updateDateAuthor = models.DateTimeField(auto_now=True)
     
@@ -34,6 +37,9 @@ class Book(models.Model):
     titleBook = models.CharField(max_length=150, blank=False, null=False)
     publicationDateBook = models.DateField(blank=False, null=False)
     authorId = models.ManyToManyField(Author)
+    descriptionBook = models.TextField(null=True, blank=True)
+    amountBook = models.SmallIntegerField(default=1)
+    imageBook = models.ImageField(upload_to='book/books/images/', max_length=255, null=True, blank=True)
     createDateBook = models.DateTimeField(auto_now_add=True)
     updateDateBook = models.DateTimeField(auto_now=True)
 
@@ -47,3 +53,26 @@ class Book(models.Model):
 
     def get_authorId(self):
         return ", ".join([str(c) for c in self.authorId.all()])
+
+class Reservation(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount_days = models.SmallIntegerField(default=7)
+    createDate = models.DateTimeField(auto_now_add=True)
+    updateDate = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = 'Reservation'
+        verbose_name_plural = 'Reservations'
+        ordering = ['book']
+
+    def __str__(self):
+        return f'{self.book}'
+
+def reduce_book_amount(sender, instance, **kwargs):
+    book = instance.book
+    if (book.amountBook > 0):
+        book.amountBook -= 1
+        book.save()
+
+post_save.connect(reduce_book_amount, sender=Reservation)
