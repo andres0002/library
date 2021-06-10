@@ -40,10 +40,10 @@ class ReservationResource(resources.ModelResource):
 class ReservationAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     form = ReservationForm
     search_fields = ('book', 'user')
-    readonly_fields = ('createDate', 'updateDate')
-    list_filter = ('book', 'user', 'createDate', 'updateDate')
+    readonly_fields = ('createDate', 'expirationDate', 'updateDate')
+    list_filter = ('book', 'user', 'status', 'createDate', 'expirationDate', 'updateDate')
     list_display = [
-        'book', 'user', 'amount_days', 'createDate', 'updateDate'
+        'book', 'user', 'amount_days', 'status', 'createDate', 'expirationDate', 'updateDate'
     ]
     resource_class = ReservationResource
 

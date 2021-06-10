@@ -55,6 +55,8 @@
                             <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-book"></i>Books</a>
                             <ul class="sub-menu children dropdown-menu">
                                 <li><i class="menu-icon fa fa-list"></i><a href="{% url 'book:available_books' %}">Available Books</a></li>
+                                <li><i class="menu-icon fa fa-list"></i><a href="{% url 'book:books_reservations_list' %}">Books Reservations List</a></li>
+                                <li><i class="menu-icon fa fa-list"></i><a href="{% url 'book:expired_reservations_list' %}">Expired Reservations List</a></li>
                             </ul>
                         </li>
                     </ul>

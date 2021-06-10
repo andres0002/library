@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_protect
 from django.views.decorators.cache import never_cache
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic.edit import FormView
-from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import View, TemplateView, ListView, CreateView, UpdateView, DeleteView
 from django.contrib.auth import login, logout
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from apps.user.models import User
@@ -33,9 +33,10 @@ class Login(FormView):
         login(self.request, form.get_user())
         return super(Login, self).form_valid(form)
 
-def logoutUser(request):
-    logout(request)
-    return HttpResponseRedirect('/accounts/login/')
+class Logout(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return HttpResponseRedirect('/accounts/login/')
 
 class Home(LoginRequiredMixin, TemplateView):
     template_name = 'index.html'

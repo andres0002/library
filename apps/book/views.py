@@ -11,6 +11,7 @@ from apps.user.mixins import UserPermissionRequiredMixin
 
 # Create your views here.
 
+#Lessons of authors.
 class AuthorsList(LoginRequiredMixin, UserPermissionRequiredMixin, TemplateView):
     permission_required = ('user.view_author', 'user.add_author', 'user.change_author', 'user.delete_author')
     template_name = 'book/author/authors_table.html'
@@ -100,6 +101,7 @@ class DeleteAuthor(LoginRequiredMixin, UserPermissionRequiredMixin, DeleteView):
         else:
             redirect('book:authors_list')
 
+#Lessons of Books.
 class BooksList(LoginRequiredMixin, UserPermissionRequiredMixin, TemplateView):
     permission_required = ('user.view_book', 'user.add_book', 'user.change_book', 'user.delete_book')
     template_name = 'book/book/books_table.html'
@@ -121,6 +123,31 @@ class BooksTable(LoginRequiredMixin, UserPermissionRequiredMixin, ListView):
             return HttpResponse(serialize('json', self.get_queryset(), use_natural_foreign_keys=True), 'application/json')
         else:
             return redirect('book:books_list')
+
+class BooksReservationsList(LoginRequiredMixin, ListView):
+    model = Reservation
+    template_name = 'book/book/books_reservations_table.html'
+
+    def get_queryset(self):
+        return self.model.objects.filter(status=True, user=self.request.user)
+
+class BooksReservationsTable(LoginRequiredMixin, ListView):
+    model = Reservation
+
+    def get_queryset(self):
+        return self.model.objects.filter(status=True, user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        context['books_reservations'] = self.get_queryset()
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if (request.is_ajax()):
+            return HttpResponse(serialize('json', self.get_queryset(), use_natural_foreign_keys=True), 'application/json')
+        else:
+            return redirect('book:books_reservations_list')
+
 class CreateBook(LoginRequiredMixin, UserPermissionRequiredMixin, CreateView):
     permission_required = 'user.add_book'
     model = Book
@@ -205,6 +232,7 @@ class AvailableBookDetail(LoginRequiredMixin, DetailView):
             return render(request, self.template_name, {'object': self.get_object()})
         return redirect('book:available_books')
 
+#Lessons of Reservations.
 class ReservationRegister(LoginRequiredMixin, CreateView):
     model = Reservation
     success_url = reverse_lazy('book:available_books')
@@ -226,3 +254,23 @@ class ReservationRegister(LoginRequiredMixin, CreateView):
                     response.status_code = 201
                     return response
         return redirect('book:available_books')
+
+class ExpiredReservationsList(LoginRequiredMixin, TemplateView):
+    template_name = 'book/book/expired_reservations_table.html'
+
+class ExpiredReservationsTable(LoginRequiredMixin, ListView):
+    model = Reservation
+
+    def get_queryset(self):
+        return self.model.objects.filter(status=False, user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = {}
+        context['expired_reservations'] = self.get_queryset()
+        return context
+
+    def get(self, request, *args, **kwargs):
+        if (request.is_ajax()):
+            return HttpResponse(serialize('json', self.get_queryset(), use_natural_foreign_keys=True), 'application/json')
+        else:
+            return redirect('book:expired_reservations_list')

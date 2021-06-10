@@ -17,8 +17,7 @@ from django.contrib import admin
 from django.conf import settings
 from django.views.static import serve
 from django.urls import path, include, re_path
-from django.contrib.auth.decorators import login_required
-from apps.user.views import Login, logoutUser, Home
+from apps.user.views import Login, Logout, Home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,7 +25,7 @@ urlpatterns = [
     path('user/', include(('apps.user.urls', 'user'))),
     path('book/', include(('apps.book.urls', 'book'))),
     path('accounts/login/', Login.as_view(), name='login'),
-    path('logout/', login_required(logoutUser), name='logout'),
+    path('logout/', Logout.as_view(), name='logout'),
 ]
 
 #Media Files.

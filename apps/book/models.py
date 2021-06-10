@@ -1,3 +1,4 @@
+from datetime import timedelta
 from django.db import models
 from django.db.models.signals import post_save
 from apps.user.models import User
@@ -48,6 +49,9 @@ class Book(models.Model):
         verbose_name_plural = 'Books'
         ordering = ['titleBook']
 
+    def natural_key(self):
+        return self.titleBook
+
     def __str__(self):
         return self.titleBook
 
@@ -58,7 +62,9 @@ class Reservation(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount_days = models.SmallIntegerField(default=7)
+    status = models.BooleanField(default=True)
     createDate = models.DateTimeField(auto_now_add=True)
+    expirationDate = models.DateTimeField(null=True, blank=True)
     updateDate = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -75,4 +81,13 @@ def reduce_book_amount(sender, instance, **kwargs):
         book.amountBook -= 1
         book.save()
 
+def add_expired_date_reservation(sender, instance, **kwrags):
+    book = instance.book
+    if (instance.expirationDate is None):
+        instance.expirationDate = instance.createDate + timedelta(days=instance.amount_days)
+        instance.save()
+        book.amountBook += 1
+        book.save()
+
 post_save.connect(reduce_book_amount, sender=Reservation)
+post_save.connect(add_expired_date_reservation, sender=Reservation)
